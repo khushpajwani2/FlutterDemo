@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutterdemo/screens/login.dart';
-import 'package:flutterdemo/routes/routes.dart';
+import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
 import 'package:toast/toast.dart';
 
 class Home extends StatelessWidget {
@@ -9,19 +8,24 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Declare Variables here...
+    var scaffoldState = GlobalKey<ScaffoldState>();
 /*    Map data = {};
     data = ModalRoute.of(context)?.settings.arguments as Map;*/
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+          leading: Builder(
+            builder: (context) => // Ensure Scaffold is in context
+                IconButton(
+                    // icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.menu),
+                    onPressed: () => Scaffold.of(context).openDrawer()),
+            // onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
           ),
           // title: const Text("Sample"),
           title: const Text("DashBoard"),
           titleTextStyle: const TextStyle(
-              color: Colors.amber,
+              color: Colors.white,
               fontSize: 20,
               wordSpacing: 10,
               shadows: [
@@ -32,6 +36,69 @@ class Home extends StatelessWidget {
                 )
               ]),
           // centerTitle: true,
+        ),
+        drawer: Drawer(
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: const DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                    child: Text(
+                      'Drawer Header',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: ListView(
+                  // Important: Remove any padding from the ListView.
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ListTile(
+                      title: const Text('Home'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Profile'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Logout'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        logout_dialog.logoutDialog(context: context, screen: '/login');
+                        // Navigator.pushReplacementNamed(context, '/login');
+                        // Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
         body: const Data());
   }
