@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutterdemo/components/backgroundimage.dart';
 import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
 import 'package:toast/toast.dart';
 
@@ -30,7 +32,7 @@ class Home extends StatelessWidget {
               wordSpacing: 10,
               shadows: [
                 Shadow(
-                  color: Color(0x73FF),
+                  color: Color(0x000073ff),
                   blurRadius: 4,
                   offset: Offset(4, 8),
                 )
@@ -44,17 +46,29 @@ class Home extends StatelessWidget {
                 flex: 1,
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: const DrawerHeader(
-                    decoration: BoxDecoration(
+                  child: DrawerHeader(
+                    decoration: const BoxDecoration(
                       color: Colors.blue,
                     ),
-                    child: Text(
-                      'Drawer Header',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Drawer Header',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white,
+                          ),
+                        ),
+                        CircleAvatar(
+                          radius: 45.0,
+                          child: ClipRRect(
+                            child: backgroundImage(),
+                            borderRadius: BorderRadius.circular(400.0),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -89,7 +103,8 @@ class Home extends StatelessWidget {
                         // Update the state of the app
                         // ...
                         // Then close the drawer
-                        logout_dialog.logoutDialog(context: context, screen: '/login');
+                        logout_dialog.logoutDialog(
+                            context: context, screen: '/login');
                         // Navigator.pushReplacementNamed(context, '/login');
                         // Navigator.pop(context);
                       },
