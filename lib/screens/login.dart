@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutterdemo/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 // void main() => runApp(const Login());
@@ -17,18 +18,21 @@ class _LoginState extends State<Login> {
   TextEditingController nameController = TextEditingController();
   String title = "Empty";
   String message = "Empty";
-  final alphanumeric = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+  final alphanumeric = RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void validate() {
+  Future<void> validate() async {
     if (userNameController.text.trim().isNotEmpty &&
         userNameController.text.trim() != "" &&
         passwordController.text.trim().isNotEmpty &&
         passwordController.text.trim() != "" &&
         alphanumeric.hasMatch(userNameController.text.trim())) {
-      Navigator.pushReplacementNamed(context, '/home', arguments: {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userName', title);
+      Navigator.pushReplacementNamed(context, '/main', arguments: {
         // 'title': 'This is title',
         'title': title,
         'message': message,
@@ -40,6 +44,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Second Route"),
@@ -47,7 +52,7 @@ class _LoginState extends State<Login> {
       body: Container(
         padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(

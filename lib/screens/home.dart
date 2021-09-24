@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterdemo/components/backgroundimage.dart';
 import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class Home extends StatelessWidget {
@@ -61,13 +62,7 @@ class Home extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        CircleAvatar(
-                          radius: 45.0,
-                          child: ClipRRect(
-                            child: backgroundImage(),
-                            borderRadius: BorderRadius.circular(400.0),
-                          ),
-                        ),
+                        circleImage('assets/image/desktop.png'),
                       ],
                     ),
                   ),
@@ -142,6 +137,12 @@ class DataState extends State<Data> {
     });
   }
 
+  Future<String?> getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('userName');
+    return username;
+  }
+
   void decrement() {
     setState(() {
       if (_size == 0) {
@@ -166,6 +167,7 @@ class DataState extends State<Data> {
   Widget build(BuildContext context) {
     Map data = {};
     data = ModalRoute.of(context)?.settings.arguments as Map;
+
     return Container(
       margin: const EdgeInsets.all(30),
       padding: const EdgeInsets.all(20),
@@ -185,7 +187,7 @@ class DataState extends State<Data> {
       child: Column(
         children: [
           Text(
-            "Hi, " + data['title'] + "!! :- $_size",
+            "Hi, " + getUsername().toString() + "!! :- $_size",
             style: const TextStyle(fontSize: 20, shadows: [
               Shadow(
                 color: Color(0x61FF0000),

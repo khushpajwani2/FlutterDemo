@@ -40,6 +40,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   # Toast
   toast: ^0.1.5
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   # SplashScreen

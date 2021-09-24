@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> logoutDialog({required BuildContext context, required String screen}) {
+Future<void> logoutDialog({required BuildContext context, required String screen}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -17,7 +20,9 @@ Future<void> logoutDialog({required BuildContext context, required String screen
             child: const Text('No'),
           ),
           FlatButton(
-            onPressed: () {
+            onPressed: () async {
+              await prefs.clear();
+              print("log" + prefs.getString('userName').toString());
               Navigator.pop(context);
               Navigator.pushReplacementNamed(context, screen);
             },
