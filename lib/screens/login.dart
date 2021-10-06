@@ -32,7 +32,10 @@ class _LoginState extends State<Login> {
         alphanumeric.hasMatch(userNameController.text.trim())) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('userName', title);
-      Navigator.pushReplacementNamed(context, '/main', arguments: {
+      print("This is useeername $title");
+      print("*************************This is useeername " +
+          prefs.getString("userName"));
+      Navigator.pushReplacementNamed(context, '/home', arguments: {
         // 'title': 'This is title',
         'title': title,
         'message': message,
@@ -44,7 +47,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Second Route"),

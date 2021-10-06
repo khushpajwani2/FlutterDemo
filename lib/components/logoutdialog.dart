@@ -21,7 +21,8 @@ Future<void> logoutDialog({required BuildContext context, required String screen
           ),
           FlatButton(
             onPressed: () async {
-              await prefs.clear();
+              // await prefs.clear();
+              await prefs.remove('userName');
               print("log" + prefs.getString('userName').toString());
               Navigator.pop(context);
               Navigator.pushReplacementNamed(context, screen);

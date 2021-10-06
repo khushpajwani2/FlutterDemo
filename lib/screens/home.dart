@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutterdemo/components/backgroundimage.dart';
+import 'package:flutterdemo/components/circleimage.dart';
 import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
@@ -11,7 +11,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Declare Variables here...
-    var scaffoldState = GlobalKey<ScaffoldState>();
 /*    Map data = {};
     data = ModalRoute.of(context)?.settings.arguments as Map;*/
     return Scaffold(
@@ -130,17 +129,27 @@ class Data extends StatefulWidget {
 
 class DataState extends State<Data> {
   int _size = 0;
+  late SharedPreferences logindata;
+  String username = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    initial();
+    super.initState();
+  }
+
+  void initial() async {
+    logindata = await SharedPreferences.getInstance();
+    setState(() {
+      username = logindata.getString('userName');
+    });
+  }
 
   void grow() {
     setState(() {
       _size += 1;
     });
-  }
-
-  Future<String?> getUsername() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('userName');
-    return username;
   }
 
   void decrement() {
@@ -168,6 +177,8 @@ class DataState extends State<Data> {
     Map data = {};
     data = ModalRoute.of(context)?.settings.arguments as Map;
 
+    // print("lakdsk $username");
+
     return Container(
       margin: const EdgeInsets.all(30),
       padding: const EdgeInsets.all(20),
@@ -187,7 +198,7 @@ class DataState extends State<Data> {
       child: Column(
         children: [
           Text(
-            "Hi, " + getUsername().toString() + "!! :- $_size",
+            "Hi, $username !! :- $_size",
             style: const TextStyle(fontSize: 20, shadows: [
               Shadow(
                 color: Color(0x61FF0000),
