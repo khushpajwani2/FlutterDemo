@@ -6,6 +6,11 @@ import 'package:flutterdemo/routes/routes.dart';
 import 'package:flutterdemo/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter/material.dart';
+import 'package:splashscreen/splashscreen.dart';
+
+import 'components/circleimage.dart';
+
 String _userName;
 Widget _screen;
 
@@ -32,7 +37,7 @@ Future<void> main() async {
     _screen = const Home();
     // Navigator.pushReplacementNamed(context, '/home');
   }
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -43,6 +48,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
     // TODO: implement initState
@@ -54,9 +60,39 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    return new MaterialApp(
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backwardsCompatibility: false, // 1
+          systemOverlayStyle: SystemUiOverlayStyle.light, // 2
+        ),
+      ),
+      initialRoute: '/',
+      routes: routes,
+      debugShowCheckedModeBanner: false,
+      home: new SplashScreen(
+        seconds: 3,
+        navigateAfterSeconds: new AfterSplash(),
+        title: new Text(
+          'Welcome In SplashScreen',
+          style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+        ),
+        image: new Image.network(
+            'https://flutter.io/images/catalog-widget-placeholder.png'),
+        // image: circleImage('assets/image/desktop.png'),
+        backgroundColor: Colors.white,
+        loaderColor: Colors.red,
+      ),
+    );
+  }
+}
+
+class AfterSplash extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     // Declare Variables here...
     print("This is username:-  $_userName");
-    return MaterialApp(
+    return new MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
           backwardsCompatibility: false, // 1
@@ -67,7 +103,6 @@ class _MyAppState extends State<MyApp> {
       routes: routes,
       debugShowCheckedModeBanner: false,
       home: _screen,
-      // home: const Login(),
     );
   }
 }
