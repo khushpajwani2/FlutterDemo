@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterdemo/components/circleimage.dart';
 import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
+import 'package:flutterdemo/models/albummodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -54,7 +58,7 @@ class Home extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Drawer Header',
+                          'Flutter Demo',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.normal,
@@ -128,14 +132,18 @@ class Data extends StatefulWidget {
 }
 
 class DataState extends State<Data> {
+  late Future<Album> futureAlbum;
   int _size = 0;
   late SharedPreferences logindata;
   String username = "";
+  late Future<Album?> getToken;
 
   @override
   void initState() {
     // TODO: implement initState
     initial();
+    getToken = performUserLogin("eve.holt@reqres.in", "cityslicka");
+    // futureAlbum = fetchAlbum();
     super.initState();
   }
 
@@ -172,11 +180,36 @@ class DataState extends State<Data> {
     });
   }
 
+  static Future<Album?> performUserLogin(String email, String password) async {
+    try {
+      Map<String, String> headers = {"Content-type": "application/json"};
+      Map<String, String> JsonBody = {'email': email, 'password': password};
+      print("The JSON Object is here $JsonBody");
+      // make POST request
+      final response = await http.post(Uri.parse('https://reqres.in/api/login'),
+          body: JsonBody);
+      // check the status code for the result
+      int statusCode = response.statusCode;
+      print("Login calling $response $statusCode");
+      if (statusCode == 200) {
+        print("********This is the 200 response*******");
+        final responseJson = jsonDecode(response.body);
+        print("hellllo" + Album.fromJson(responseJson).token);
+        return Album.fromJson(responseJson);
+      } else {
+        throw Exception("Error in login");
+        return null;
+        //return UserModel();
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Map data = {};
     data = ModalRoute.of(context)?.settings.arguments as Map;
-
     // print("lakdsk $username");
 
     return Container(
@@ -239,8 +272,23 @@ class DataState extends State<Data> {
             height: 35,
             color: const Color(0xFF801E48),
             onPressed: () {
+              FutureBuilder<Album?>(
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    print("helllooo" + snapshot.connectionState.toString());
+                    // return const CircularProgressIndicator();
+                    // return Text(snapshot.data!.token);
+                    return SnackBar(content: Text(snapshot.data!.token));
+                  } else {
+                    print('This is error ${snapshot.error}');
+                    // return const CircularProgressIndicator();
+                    return Text('${snapshot.error}');
+                  }
+                },
+                future: getToken,
+              );
               clearValue();
-              print("********* $_size **********");
+              print("********c* $_size **********");
             },
             child: const Text("Clear",
                 style: TextStyle(fontSize: 16.0, color: Colors.white)),
