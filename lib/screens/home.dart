@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutterdemo/components/circleimage.dart';
 import 'package:flutterdemo/components/logoutDialog.dart' as logout_dialog;
 import 'package:flutterdemo/models/albummodel.dart';
