@@ -135,6 +135,8 @@ class DataState extends State<Data> {
   int _size = 0;
   late SharedPreferences logindata;
   String username = "";
+
+
   late Future<Album?> getToken;
 
   @override
